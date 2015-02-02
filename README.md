@@ -25,3 +25,9 @@ $ java -cp target/julia-0.0.1-SNAPSHOT.jar OutputViewer 600
 ```
 
 ![](https://i.imgur.com/JoI7caQ.png)
+
+
+Examples :
+![0.835-0.2321i](https://i.imgur.com/zYI0IJ4.png)
+
+![0.285+0.01i](https://i.imgur.com/WQNOqBI.png)
