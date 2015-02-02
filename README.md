@@ -11,7 +11,7 @@ $ mvn install
 Generate the input file into a directory named `input` :
 ```
 $ mkdir input
-$ java -cp target/julia-0.0.1-SNAPSHOT.jar InputGenerator 1000 > input/file
+$ java -cp target/julia-0.0.1-SNAPSHOT.jar InputGenerator 600 > input/file
 ```
 
 Launch the jobs :
