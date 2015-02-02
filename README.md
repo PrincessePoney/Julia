@@ -8,7 +8,7 @@ Build using maven :
 ```
 $ mvn install
 ```
-Generate the input file into a directory named input:
+Generate the input file into a directory named `input` :
 ```
 $ mkdir input
 $ java -cp target/julia-0.0.1-SNAPSHOT.jar InputGenerator 1000 > input/file
