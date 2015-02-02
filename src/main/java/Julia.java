@@ -18,17 +18,17 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  */
 public class Julia {
 
-	// some parameters
-	private static Complex COMPLEX;
-
 	// some constants
-	private static int SIZE;
 	private static final int ITERS = 256;
-
 	private static final double xmin = -2.0;
 	private static final double ymin = -2.0;
 	private static final double width = 4.0;
 	private static final double height = 4.0;
+
+	// property strings for hadoop configuration
+	private static final String PROPERTY_JULIA_REAL = "julia.real";
+	private static final String PROPERTY_JULIA_IMAG = "julia.imag";
+	private static final String PROPERTY_JULIA_SIZE = "julia.size";
 
 	// return number of iterations to check z is in the Julia set of COMPLEX
 	public static int julia(Complex c, Complex z, int iters) {
@@ -49,14 +49,21 @@ public class Julia {
 
 		public void map(Object key, Text value, Context context)
 				throws IOException, InterruptedException {
+
+			Configuration conf = context.getConfiguration();
+			Float defaultFloat = (float) -1;
+			Complex c = new Complex(conf.getFloat(PROPERTY_JULIA_REAL,
+					defaultFloat), conf.getFloat(PROPERTY_JULIA_IMAG,
+					defaultFloat));
+
 			String[] parts = value.toString().split(" ");
 			Long i = Long.parseLong(parts[0]);
 			Long j = Long.parseLong(parts[1]);
 
-			double x = xmin + i * width / SIZE;
-			double y = ymin + j * height / SIZE;
+			double x = xmin + i * width / conf.getInt(PROPERTY_JULIA_SIZE, -1);
+			double y = ymin + j * height / conf.getInt(PROPERTY_JULIA_SIZE, -1);
 			Complex z = new Complex(x, y);
-			int t = julia(COMPLEX, z, ITERS);
+			int t = julia(c, z, ITERS);
 
 			context.write(new Text(i + " " + j), new IntWritable(t));
 		}
@@ -87,16 +94,18 @@ public class Julia {
 			System.out.println("complex : a+ib");
 			System.exit(0);
 		}
-		double real = Double.parseDouble(args[0]);
-		double imag = Double.parseDouble(args[1]);
-		COMPLEX = new Complex(real, imag);
-		SIZE = Integer.parseInt(args[2]);
 
 		// Create configuration
 		Configuration conf = new Configuration();
 
+		float real = Float.parseFloat(args[0]);
+		float imag = Float.parseFloat(args[1]);
+		conf.setFloat(PROPERTY_JULIA_REAL, real);
+		conf.setFloat(PROPERTY_JULIA_IMAG, imag);
+		conf.setInt(PROPERTY_JULIA_SIZE, Integer.parseInt(args[2]));
+
 		// Create job
-		Job job = Job.getInstance(conf);
+		Job job = new Job(conf);
 
 		// HDFS
 		FileSystem fs = FileSystem.get(conf);
