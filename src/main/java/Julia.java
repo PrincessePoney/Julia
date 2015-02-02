@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
@@ -65,7 +66,9 @@ public class Julia {
 			Complex z = new Complex(x, y);
 			int t = julia(c, z, ITERS);
 
-			context.write(new Text(i + " " + j), new IntWritable(t));
+			context.write(new Text(i + " " + j), new IntWritable(Color.HSBtoRGB(0.625f,
+					1.0f - Helper.clamp(t / 256.0f, 0f, 1.0f),
+					Helper.clamp(t / 256.0f, 0f, 1.0f))));
 		}
 	}
 
@@ -78,8 +81,7 @@ public class Julia {
 
 		public void reduce(Text key, Iterable<IntWritable> values,
 				Context context) throws IOException, InterruptedException {
-			context.write(key, new IntWritable((255 - values.iterator().next()
-					.get()) % 256));
+			context.write(key, values.iterator().next());
 		}
 	}
 

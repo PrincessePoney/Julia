@@ -21,35 +21,32 @@ public class ColorJulia {
 		double width = 4.0;
 		double height = 4.0;
 
-		int N = 600;
-		int ITERS = 256;
+		int N = 3000;
+		int ITERS = 10000;
 
-		// read in color map
-		Color[] colors = new Color[ITERS];
-		for (int t = 0; t < ITERS; t++) {
-			 int r = (255-t) % 256;
-			 int g = (255-t) % 256;
-			 int b = (255-t) % 256;
-			 colors[t] = new Color(r, g, b);
-		}
 		Picture pic = new Picture(N, N);
 
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				
-				// ça c'est l'algo à faire map reducé
-				
+
 				double x = xmin + i * width / N;
 				double y = ymin + j * height / N;
 				Complex z = new Complex(x, y);
 				int t = julia(c, z, ITERS);
-				
-				pic.set(i, j, colors[t]);
-				
-				
+
+				pic.set(i,
+						j,
+						new Color(Color.HSBtoRGB(0.625f,
+								1.0f - clamp(t / 256.0f, 0f, 1.0f),
+								clamp(t / 256.0f, 0f, 1.0f))));
+
 			}
 		}
 		pic.show();
+	}
+
+	public static float clamp(float val, float min, float max) {
+		return Math.max(min, Math.min(max, val));
 	}
 
 }

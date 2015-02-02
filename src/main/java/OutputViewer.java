@@ -31,7 +31,7 @@ public class OutputViewer {
 				Integer y = Integer.parseInt(rightInputs[0]);
 				Integer color = Integer.parseInt(rightInputs[1]);
 				if (x < N && y < N) {
-					pic.set(x, y, new Color(color, color, color));
+					pic.set(x, y, new Color(color));
 				}
 			}
 		} catch (IOException e) {

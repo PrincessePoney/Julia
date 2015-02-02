@@ -24,4 +24,4 @@ Inspect the result :
 $ java -cp target/julia-0.0.1-SNAPSHOT.jar OutputViewer 600
 ```
 
-![](https://i.imgur.com/tKCSHyL.png)
+![](https://i.imgur.com/JoI7caQ.png)
